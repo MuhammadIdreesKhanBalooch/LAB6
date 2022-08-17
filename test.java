@@ -1,4 +1,4 @@
-package testNG;
+
 
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
@@ -19,12 +19,25 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 
-public class test {
+public class NewTest1 {
 
-	WebDriver driver = new ChromeDriver();
-	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-	Actions actions = new Actions(driver);
-  @Test(priority=0)
+	WebDriver driver;
+	
+	
+	
+	 @BeforeTest
+	  public void beforeTest() {
+		  
+		// setting selenium
+				System.setProperty("webdriver.chrome.driver", "C:\\Users\\4073\\Desktop\\chromedr\\chromedriver.exe");
+				driver = new ChromeDriver();
+				driver.manage().window().maximize();
+		// hitting url
+				String url = "https://omayo.blogspot.in/";
+				driver.get(url);
+				
+	  }
+	@Test(priority=0)
   public void input() {
 	 //name
 	  	driver.findElement(By.xpath("//div[contains(@class,'navbar')]//following :: textarea[contains(@id,'ta')]")).sendKeys("Muhammad Idrees");
@@ -96,10 +109,11 @@ public class test {
   public void preLoadedText() {
 	//preloadedTextBox  
 		  WebElement preLoadedTextBox = driver.findElement(By.xpath("//div[contains(@class,'widget-content')]//child :: input[contains(@value,'Selenium')]"));
-		  preLoadedTextBox.click();
-		  preLoadedTextBox.sendKeys(Keys.CONTROL + "a");
-		  preLoadedTextBox.sendKeys(Keys.BACK_SPACE);
-		  preLoadedTextBox.sendKeys("automation on 🔥");
+		  Actions actions = new Actions(driver);
+		  actions.click(preLoadedTextBox).perform();
+		  actions.sendKeys(Keys.CONTROL + "a");
+		  actions.sendKeys(Keys.BACK_SPACE);
+
 	//enabledButton 
 		  WebElement btn2 = driver.findElement(By.xpath("//div[contains(@class,'widget-content')]//child :: button[contains(text(),\"Button2\")]"));
 			btn2.click();
@@ -117,6 +131,7 @@ public class test {
   @Test(priority=7)
   public void waitForTextDisappear() {
 	  //clicking after text disapppears
+	  	WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@id,'delete')]")));
 		driver.findElement(By.xpath("//div[contains(@class,'widget-content')]//child :: input[contains(@value,'ClickAfter')]")).click();
 		driver.switchTo().alert().accept();
@@ -135,6 +150,7 @@ public void newPopWindow() {
 			while (iterator.hasNext()) {
 				subWindowHandler = iterator.next(); 
 			}
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			driver.switchTo().window(subWindowHandler);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("main")));
 	//getting text from new popup window
@@ -156,7 +172,10 @@ public void newPopWindow() {
 			System.out.println("'My Button' functionality before clicking 'Try It' button" + myBtn.isEnabled());
 	// cliking tryIt button
 			driver.findElement(By.xpath("//button[contains(text(),'Try')]")).click();
+			
 	// my btn functionality after clicking "try it"
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'My')]")));
 			System.out.println("'My Button' functionality after clicking 'Try It' button" + myBtn.isEnabled());
   }
   
@@ -164,12 +183,14 @@ public void newPopWindow() {
   public void doubleClickButton() {
 	 //double click button 
 			WebElement dbClick = driver.findElement(By.xpath("//button[contains(text(),'Double')]"));  
+			Actions actions = new Actions(driver);
 			actions.doubleClick(dbClick).perform();
 	//handle alert
 			driver.switchTo().alert().accept();
 	// chekThis buton
 			driver.findElement(By.xpath("//button[contains(text(),'Check')]")).click();
 	// checkbox wait
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[contains(@id,'dt') ]")));
 			// checkbox click
 			driver.findElement(By.xpath("//input[contains(@id,'dt') ]")).click();		
@@ -178,9 +199,9 @@ public void newPopWindow() {
   @Test(priority=11)
   public void gender() {
 	 //gender radio 
-	  		driver.findElement(By.xpath("//div[contains(@class,'widget HTML')]//descendant :: input)[13]")).click();
+	  		driver.findElement(By.xpath("(//div[contains(@class,'widget HTML')]//descendant :: input)[15]")).click();
 	 //clickToget alert
-	  		driver.findElement(By.xpath("//input[contains(@value,'ClickTo')]")).click();
+	  		driver.findElement(By.xpath("//div[contains(@class,'widget-content')]//descendant :: input [contains(@value,'ClickTo')]")).click();
 	 //handle alert
 	  		driver.switchTo().alert().accept();
 	 //select blue
@@ -189,11 +210,13 @@ public void newPopWindow() {
 	  		driver.findElement(By.xpath("//input[contains(@value,'ora')]")).click();
 	 //reading text
 	  		WebElement read = driver.findElement(By.xpath("//input[contains(@value,'Read')]"));
+	  		Actions actions = new Actions(driver);
 	  		actions.doubleClick(read).perform();
 	 //get prompt
 	  		
 	  		WebElement getPrompt = driver.findElement(By.xpath("//input[contains(@value,'GetPrompt')]"));
 			getPrompt.click();
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			Alert promptPresent = wait.until(ExpectedConditions.alertIsPresent());
 			System.out.println(promptPresent.getText());
 	//put name in alert
@@ -226,21 +249,12 @@ public void newPopWindow() {
 			driver.findElement(By.xpath("//input[contains(@value,'Book')]")).click();	
 	//deropdown
 			driver.findElement(By.xpath("//button[contains(@class,'drop')]")).click();
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[contains(text(),'Facebook')]")));
 			driver.findElement(By.xpath("//a[contains(text(),'Facebook')]")).click();
   }
   
-  @BeforeTest
-  public void beforeTest() {
-	  
-	// setting selenium
-			System.setProperty("webdriver.chrome.driver", "C:\\Users\\khan\\chrome driver\\chromedriver.exe");
-			
-	// hitting url
-			String url = "https://omayo.blogspot.in/";
-			driver.get(url);
-			
-  }
+ 
 
   @AfterTest
   public void afterTest() {
